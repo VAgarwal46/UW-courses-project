@@ -1,13 +1,9 @@
-import os.path
-import createDatabase 
-import findCourse
+from menu import mainMenu 
 
-if os.path.isfile('./coursesdb.sqlite') == False:
-    db = createDatabase.createDatbase()
-    print("DATABASE IS COMPLETE!")
-else:
-    db = createDatabase.existingDatabase()
-
+mainMenu()
+    
 #print(findCourse.courseListFilter(db,((3,4),0,6)))
-#print(findCourse.courseListCourseNum(db,"CS200"))
-#print(findCourse.courseListCourseTitle(db, "Computer engineering"))
+#print(findCourse.courseListCourseName(db,"CS200"))
+#print(findCourse.courseListCourseTitle(db, "personal"))
+#sprint(findCourse.courseListCourseNum(db,300))
+#print(menu.mainMenu())

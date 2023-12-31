@@ -214,6 +214,8 @@ def addDeptToDatabase(db, dept, deptLink):
         db.insertValues('coursesTable', 
                         ('deptNameID', 'courseNum','courseTitle','credits','description','preReqs','genEdID','breadthID','levelID'),
                         (deptID, courseNum,courseTitle,credits,desc,req,genEdID,breadthID,levelID))
+        
+        
 
 #==========================Function Header=========================================================
 '''
@@ -228,7 +230,7 @@ RETURN:
                                                                 'coursesdb.sqlite'
 '''
 #==========================Function Header=========================================================
-def createDatbase():
+def createDatabase():
     dbase = sqlite('coursesdb')
     createTables(dbase)
     genEdTable(dbase)

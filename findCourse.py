@@ -7,11 +7,11 @@ def courseListFilter(db, filters):
                                     whereClauseFilters(filters))
 
 #find by course name
-def courseListCourseNum(db, name, filters = (0,0,0)):
+def courseListCourseName(db, name, filters = (0,0,0)):
     name = name.upper()
     courseNum = ""
     dept = ""
-    #separating dept name and course nnumber from the course name
+    #separating dept name and course number from the course name
     for ch in name:
         if ch.isnumeric():
             courseNum += ch
@@ -27,17 +27,24 @@ def courseListCourseNum(db, name, filters = (0,0,0)):
                                     "coursesTable.deptNameID = deptNameTable.id",
                                     ("deptAbbreviation", "CourseNum", "CourseTitle", "credits"),
                                     whereClause)
-        return course
+        if course == None or course == "" or course == []:
+            print("COULDN'T FIND ANY SUCH COURSE")
+        else:
+            return course
     except: 
-        print("COULDN'T FIND THE COURSE")
+        print("COULDN'T FIND ANY SUCH COURSE")
     
     ##IF GIVEN COURSE NAME DOES NOT EXIST
     print("DO YOU MEAN")
 
+    depts = db.extractValuesSingleTable("deptNameTable", "deptAbbreviation", f"deptAbbreviation = '{dept}'")
+    if depts == None or depts == "" or depts == []:
+        return courseListDeptName(db, dept, filters)
+    
     #Trying to find course with dept name having more characters in it. eg. CS-(Comp Sci)
     deptLike = ""
     for ch in dept:
-        deptLike += f"{ch}% "
+        deptLike += f"%{ch}% "
     deptLike = deptLike.strip()
     whereClause = f"courseNum = {courseNum} and deptAbbreviation like '{deptLike}'"
     if filters != (0,0,0):
@@ -47,41 +54,50 @@ def courseListCourseNum(db, name, filters = (0,0,0)):
                                     "coursesTable.deptNameID = deptNameTable.id",
                                     ("deptAbbreviation", "CourseNum", "CourseTitle", "credits"),
                                     whereClause)
-        return course
+        if course == None or course == "" or course == []:
+            print("COULDN'T FIND ANY SUCH COURSE")
+        else:
+            return course
     except:
-        pass
-    
-    
-    deptLike = f"{dept}%"
-    whereClause = f"courseNum = {courseNum} and deptAbbreviation like '{deptLike}'"
-    if filters != (0,0,0):
-        whereClause += f" and {whereClauseFilters(filters)}"
-    #print(whereClause)
-    course = db.extractValuesMultipleTables(("coursesTable", "deptNameTable"),
-                                    "coursesTable.deptNameID = deptNameTable.id",
-                                    ("deptAbbreviation", "CourseNum", "CourseTitle", "credits"),
-                                    whereClause)
-    #print(course)
-    if course != []:
-        return course
+        print("COULDN'T FIND ANY SUCH COURSE")
 
-    deptLike = ""
-    for ch in dept:
-        deptLike += f"%{ch}"
-    deptLike += '%'
-    whereClause = f"courseNum = {courseNum} and deptAbbreviation like '{deptLike}'"
+def courseListDeptName(db, name, filters = (0,0,0)):
+    name = name.upper().strip()
+    deptAbbrevs = db.extractValuesSingleTable("deptNameTable", "deptAbbreviation",f"deptAbbreviation = '{name}'")
+    depts = db.extractValuesSingleTable("deptNameTable", "deptName",f"deptAbbreviation = '{name}'")
+    if (deptAbbrevs != None and deptAbbrevs != "" and deptAbbrevs != []):
+        whereClause = f"deptAbbreviation = '{name}'"
+    elif depts != None and depts != "" and depts != []:
+        whereClause = f"deptName = '{name}'"
+    else:
+        print("COUNDN'T FIND THE DEPARTMENT. RECHECK THE ENTERED NAME")
+        return
     if filters != (0,0,0):
         whereClause += f" and {whereClauseFilters(filters)}"
-    #print(whereClause)
+    try : 
+        course = db.extractValuesMultipleTables(("coursesTable", "deptNameTable"),
+                                    "coursesTable.deptNameID = deptNameTable.id",
+                                    ("deptAbbreviation", "CourseNum", "CourseTitle", "credits"),
+                                    whereClause)
+        if course == None or course == "" or course == []:
+            print("COULDN'T FIND ANY SUCH COURSE")
+        else:
+            return course
+    except: 
+        print("COULDN'T FIND ANY SUCH COURSE")
+
+def courseListCourseNum(db, num, filters = (0,0,0)):
+    whereClause = f"courseNum = {num}"
+    if filters != (0,0,0):
+        whereClause += f" and {whereClauseFilters(filters)}"
     course = db.extractValuesMultipleTables(("coursesTable", "deptNameTable"),
                                     "coursesTable.deptNameID = deptNameTable.id",
                                     ("deptAbbreviation", "CourseNum", "CourseTitle", "credits"),
                                     whereClause)
     #print(course)
-    if course != []:
+    if course != [] or course != None:
         return course
-    else:
-        print("COULDN'T FIND WHAT YOU ARE LOOKING FOR")
+    print("COULDN'T FIND COURSE")
 
 #find by course title
 def courseListCourseTitle(db, title, filters = (0,0,0)):
@@ -132,5 +148,3 @@ def whereClauseFilters(filters):
                     whereClause += f" OR {filtersName[i]} = {filters[i][j]}"
                 whereClause += ")"
     return whereClause
-
-
