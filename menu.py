@@ -57,6 +57,9 @@ def searchMenu(db):
             name = input("\nCourse Name: ")
             filters = filterMenu()
             courseList = findCourse.courseListCourseName(db, name, filters)
+            if courseList == None:
+                print("TRY AGAIN!")
+                continue
             print(courseList)
         else:
             print("Wrong Input! Try again")

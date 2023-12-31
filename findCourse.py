@@ -28,17 +28,17 @@ def courseListCourseName(db, name, filters = (0,0,0)):
                                     ("deptAbbreviation", "CourseNum", "CourseTitle", "credits"),
                                     whereClause)
         if course == None or course == "" or course == []:
-            print("COULDN'T FIND ANY SUCH COURSE")
+            pass
         else:
             return course
     except: 
-        print("COULDN'T FIND ANY SUCH COURSE")
+        pass
     
     ##IF GIVEN COURSE NAME DOES NOT EXIST
-    print("DO YOU MEAN")
 
     depts = db.extractValuesSingleTable("deptNameTable", "deptAbbreviation", f"deptAbbreviation = '{dept}'")
-    if depts == None or depts == "" or depts == []:
+    if depts != None and depts != "" and depts != []:
+        print("DO YOU MEAN")
         return courseListDeptName(db, dept, filters)
     
     #Trying to find course with dept name having more characters in it. eg. CS-(Comp Sci)
@@ -57,6 +57,7 @@ def courseListCourseName(db, name, filters = (0,0,0)):
         if course == None or course == "" or course == []:
             print("COULDN'T FIND ANY SUCH COURSE")
         else:
+            print("DO YOU MEAN")
             return course
     except:
         print("COULDN'T FIND ANY SUCH COURSE")
