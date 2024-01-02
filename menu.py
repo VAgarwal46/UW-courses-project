@@ -22,7 +22,9 @@ def mainMenu():
             db = createDatabase.createDatabase()
             print("DATABASE HAS BEEN UPDATED!")
         elif choice == 2:
-            searchMenu(db)
+            exitBool = searchMenu(db)
+            if exitBool:
+                break
         elif choice == 3:
             fourYearPlanMenu()
         elif choice == 4:
@@ -61,10 +63,30 @@ def searchMenu(db):
                 print("TRY AGAIN!")
                 continue
             print(courseList)
+        elif choice == 2:
+            name = input("\nDepartment Name/Abbreviation: ")
+            filters = filterMenu()
+            courseList = findCourse.courseListDeptName(db, name, filters)
+            if courseList == None:
+                print("TRY AGAIN!")
+                continue
+            print(courseList)
+        elif choice == 3:
+            num = int(input("\nCourse Number: "))
+            filters = filterMenu()
+            courseList = findCourse.courseListCourseNum(db, num, filters)
+            if courseList == None:
+                print("TRY AGAIN!")
+                continue
+            print(courseList)
+        elif choice == 6:
+            pass
+        elif choice == 7:
+            return 1
         else:
             print("Wrong Input! Try again")
             continue
-        break
+        return 0
 
 def fourYearPlanMenu():
     print("4-year plan Menu")

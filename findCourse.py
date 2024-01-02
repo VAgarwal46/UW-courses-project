@@ -71,8 +71,19 @@ def courseListDeptName(db, name, filters = (0,0,0)):
     elif depts != None and depts != "" and depts != []:
         whereClause = f"deptName = '{name}'"
     else:
-        print("COUNDN'T FIND THE DEPARTMENT. RECHECK THE ENTERED NAME")
-        return
+        deptLike = ""
+        for ch in name:
+            deptLike += f"%{ch}% "
+        deptLike = deptLike.strip()
+        deptAbbrevs = db.extractValuesSingleTable("deptNameTable", "deptAbbreviation",f"deptAbbreviation like '{deptLike}'")
+        depts = db.extractValuesSingleTable("deptNameTable", "deptName",f"deptAbbreviation like '{deptLike}'")
+        if (deptAbbrevs != None and deptAbbrevs != "" and deptAbbrevs != []):
+            whereClause = f"deptAbbreviation like '{deptLike}'"
+        elif depts != None and depts != "" and depts != []:
+            whereClause = f"deptName like '{deptLike}'"
+        else:
+            print("COUNDN'T FIND THE DEPARTMENT. RECHECK THE ENTERED NAME")
+            return
     if filters != (0,0,0):
         whereClause += f" and {whereClauseFilters(filters)}"
     try : 
@@ -81,11 +92,11 @@ def courseListDeptName(db, name, filters = (0,0,0)):
                                     ("deptAbbreviation", "CourseNum", "CourseTitle", "credits"),
                                     whereClause)
         if course == None or course == "" or course == []:
-            print("COULDN'T FIND ANY SUCH COURSE")
+            print("COULDN'T FIND ANY COURSE")
         else:
             return course
     except: 
-        print("COULDN'T FIND ANY SUCH COURSE")
+        print("COULDN'T FIND ANY COURSE")
 
 def courseListCourseNum(db, num, filters = (0,0,0)):
     whereClause = f"courseNum = {num}"
@@ -96,9 +107,9 @@ def courseListCourseNum(db, num, filters = (0,0,0)):
                                     ("deptAbbreviation", "CourseNum", "CourseTitle", "credits"),
                                     whereClause)
     #print(course)
-    if course != [] or course != None:
+    if course != [] and course != None:
         return course
-    print("COULDN'T FIND COURSE")
+    print("COULDN'T FIND ANY COURSE FOR THAT COURSE NUMBER")
 
 #find by course title
 def courseListCourseTitle(db, title, filters = (0,0,0)):
