@@ -123,7 +123,7 @@ def courseListCourseTitle(db, title, filters = (0,0,0)):
                                     ("deptAbbreviation", "CourseNum", "CourseTitle", "credits"),
                                     whereClause)
     #print(course)
-    if course != []:
+    if course != [] and course != None:
         return course
     
     titleWords = title.split()
@@ -139,8 +139,9 @@ def courseListCourseTitle(db, title, filters = (0,0,0)):
                                     ("deptAbbreviation", "CourseNum", "CourseTitle", "credits"),
                                     whereClause)
     #print(course)
-    if course != []:
+    if course != [] and course != None:
         return course
+    print("COULDN'T FIND ANY COURSE WITH THE GIVEN TITLE")
 
 #where clause for filters
 def whereClauseFilters(filters):

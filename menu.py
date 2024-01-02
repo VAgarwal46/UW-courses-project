@@ -79,6 +79,21 @@ def searchMenu(db):
                 print("TRY AGAIN!")
                 continue
             print(courseList)
+        elif choice == 4:
+            title = input("\nCourse Title: ")
+            filters = filterMenu()
+            courseList = findCourse.courseListCourseTitle(db, title, filters)
+            if courseList == None:
+                print("TRY AGAIN!")
+                continue
+            print(courseList)
+        elif choice == 5:
+            filters = filterMenu()
+            courseList = findCourse.courseListFilter(db, filters)
+            if courseList == None:
+                print("TRY AGAIN!")
+                continue
+            print(courseList)
         elif choice == 6:
             pass
         elif choice == 7:
