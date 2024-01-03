@@ -64,13 +64,13 @@ def createTables(db):
                                     "deptName TEXT", "deptAbbreviation TEXT"])
     db.createTable('coursesTable', ["id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE",
                                     "deptNameID INTEGER", "CourseNum INTEGER", "CourseTitle TEXT",
-                                    "preReqs TEXT", "GenEdID INTEGER", "breadthID INTEGER", 
+                                    "preReqs TEXT", "GenEdID INTEGER", "EthnicSt BOOL", "breadthID INTEGER", 
                                     "levelID INTEGER", "credits TEXT", "description TEXT"])
 
 #==========================Function Header=========================================================
 '''
 This function adds to the genEdTable, all possible genEds a course can have 
-(Comm A, Comm B, QR-A, QR-B, Ethnic St) along with one called 'None' (for courses that do not fall 
+(Comm A, Comm B, QR-A, QR-B) along with one called 'None' (for courses that do not fall 
 under any of these genEds). It also assigns a unique integer id to each within the table to connect
 it to the main coursesTable.
 
@@ -83,8 +83,7 @@ def genEdTable(db):
     db.insertValues('genEdTable', ('id','genEd'), (2,'Communication Part B'))
     db.insertValues('genEdTable', ('id','genEd'), (3,'Quantitative Reasoning Part A'))
     db.insertValues('genEdTable', ('id','genEd'), (4,'Quantitative Reasoning Part B'))
-    db.insertValues('genEdTable', ('id','genEd'), (5,'Ethnic St'))
-    db.insertValues('genEdTable', ('id','genEd'), (6,'None'))
+    db.insertValues('genEdTable', ('id','genEd'), (5,'None'))
 
 #==========================Function Header=========================================================
 '''
@@ -105,7 +104,8 @@ def breadthTable(db):
     db.insertValues('breadthTable', ('id','breadth'), (5,'Physical Sci'))
     db.insertValues('breadthTable', ('id','breadth'), (6,'Social Science'))
     db.insertValues('breadthTable', ('id','breadth'), (7,'Either Humanities or Social Science'))
-    db.insertValues('breadthTable', ('id','breadth'), (8,'None'))
+    db.insertValues('breadthTable', ('id','breadth'), (8,'Either Biological Science or Social Science'))
+    db.insertValues('breadthTable', ('id','breadth'), (9,'None'))
 
 #==========================Function Header=========================================================
 '''
@@ -188,9 +188,10 @@ def addDeptToDatabase(db, dept, deptLink):
         extras = courseBlock.find(class_ = 'cb-extras')
         extralist = extras.findAll(class_ = 'courseblockextra')
         req = "None"
-        genEdID = 6
-        breadthID = 8
+        genEdID = 5
+        breadthID = 9
         levelID = 4
+        ethnicSt = 0
         for extra in extralist:
             extraStr = extra.text
             if extraStr.__contains__("Requisite"):
@@ -210,12 +211,11 @@ def addDeptToDatabase(db, dept, deptLink):
                 for value in levelTable:
                     if extraStr.__contains__(value[1]):
                         levelID = value[0]
-
+            if extraStr.__contains__("Ethnic St"):
+                ethnicSt += 1
         db.insertValues('coursesTable', 
-                        ('deptNameID', 'courseNum','courseTitle','credits','description','preReqs','genEdID','breadthID','levelID'),
-                        (deptID, courseNum,courseTitle,credits,desc,req,genEdID,breadthID,levelID))
-        
-        
+                        ('deptNameID', 'courseNum','courseTitle','credits','description','preReqs','genEdID','ethnicSt','breadthID','levelID'),
+                        (deptID, courseNum,courseTitle,credits,desc,req,genEdID,ethnicSt,breadthID,levelID))
 
 #==========================Function Header=========================================================
 '''
