@@ -216,6 +216,7 @@ def addDeptToDatabase(db, dept, deptLink):
         db.insertValues('coursesTable', 
                         ('deptNameID', 'courseNum','courseTitle','credits','description','preReqs','genEdID','ethnicSt','breadthID','levelID'),
                         (deptID, courseNum,courseTitle,credits,desc,req,genEdID,ethnicSt,breadthID,levelID))
+        ##print(courseNum)
 
 #==========================Function Header=========================================================
 '''
