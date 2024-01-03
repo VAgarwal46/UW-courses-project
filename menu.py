@@ -107,12 +107,12 @@ def fourYearPlanMenu():
     print("4-year plan Menu")
     return
 
-def filterMenu(existingFilters = (0,0,0)):
+def filterMenu(existingFilters = (0,0,0,0)):
     filters = list(existingFilters)
     while True:
         print()
         genEd = ["Communication Part A", "Communication Part B", "Quantitative Reasoning Part A",
-                "Quantitative Reasoning Part B", "Ethnic Studies"]
+                "Quantitative Reasoning Part B"]
         breadth = ["Bio Sci", "Humanities", "Literature", "Natural Sci", "Physical Sci", "Social Sci"]
         level = ["Elementary", "Intermediate", "Advanced"]
         print("GEN-EDs")
@@ -120,6 +120,9 @@ def filterMenu(existingFilters = (0,0,0)):
         for i in range(len(genEd)):
             print(f"{count}. {genEd[i]}")
             count += 1
+        print()
+        print(f"{count}. Ethnic St")
+        count += 1
         print("\nBREADTH")
         for i in range(len(breadth)):
             print(f"{count}. {breadth[i]}")
@@ -131,22 +134,38 @@ def filterMenu(existingFilters = (0,0,0)):
         print()
         print(f"{count}. No Filter")
         choice = int(input("Enter your choice(index no): "))
-        if choice > 0 and choice <= 5:
+        if choice > 0 and choice <= 4:
             if isinstance(filters[0], tuple):
                 filters[0] += (choice, )
             else:
                 filters[0] = (choice, )
-
-        elif choice <= 11:
-            if isinstance(filters[1], tuple):
-                filters[1] += (choice-5, )
-            else:
-                filters[1] = (choice-5, )
-        elif choice <= 14:
+        elif choice == 5:
+            filters[1] = 1
+        elif choice == 6:
             if isinstance(filters[2], tuple):
-                filters[2] += (choice-11, )
+                filters[2] += (1,8)
             else:
-                filters[2] = (choice-11, )
+                filters[2] = (1,8)
+        elif choice == 7:
+            if isinstance(filters[2], tuple):
+                filters[2] += (2,7)
+            else:
+                filters[2] = (2,7)
+        elif choice <= 10:
+            if isinstance(filters[2], tuple):
+                filters[2] += (choice-5, )
+            else:
+                filters[2] = (choice-5, )
+        elif choice == 11:
+            if isinstance(filters[2], tuple):
+                filters[2] += (6,7,8)
+            else:
+                filters[2] = (6,7,8)
+        elif choice <= 14:
+            if isinstance(filters[3], tuple):
+                filters[3] += (choice-11, )
+            else:
+                filters[3] = (choice-11, )
         elif choice == 15:
             return tuple(filters)
         else:

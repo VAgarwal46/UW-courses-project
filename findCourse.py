@@ -7,7 +7,7 @@ def courseListFilter(db, filters):
                                     whereClauseFilters(filters))
 
 #find by course name
-def courseListCourseName(db, name, filters = (0,0,0)):
+def courseListCourseName(db, name, filters = (0,0,0,0)):
     name = name.upper()
     courseNum = ""
     dept = ""
@@ -20,7 +20,7 @@ def courseListCourseName(db, name, filters = (0,0,0)):
     dept = dept.strip()
     whereClause = f"courseNum = {courseNum} and deptAbbreviation = '{dept}'"
     #if there are any filters (gen-eds, breadths, level)
-    if filters != (0,0,0):
+    if filters != (0,0,0,0):
         whereClause += f" and {whereClauseFilters(filters)}"
     try : 
         course = db.extractValuesMultipleTables(("coursesTable", "deptNameTable"),
@@ -47,7 +47,7 @@ def courseListCourseName(db, name, filters = (0,0,0)):
         deptLike += f"%{ch}% "
     deptLike = deptLike.strip()
     whereClause = f"courseNum = {courseNum} and deptAbbreviation like '{deptLike}'"
-    if filters != (0,0,0):
+    if filters != (0,0,0,0):
         whereClause += f" and {whereClauseFilters(filters)}"
     try:
         course = db.extractValuesMultipleTables(("coursesTable", "deptNameTable"),
@@ -62,7 +62,7 @@ def courseListCourseName(db, name, filters = (0,0,0)):
     except:
         print("COULDN'T FIND ANY SUCH COURSE")
 
-def courseListDeptName(db, name, filters = (0,0,0)):
+def courseListDeptName(db, name, filters = (0,0,0,0)):
     name = name.upper().strip()
     deptAbbrevs = db.extractValuesSingleTable("deptNameTable", "deptAbbreviation",f"deptAbbreviation = '{name}'")
     depts = db.extractValuesSingleTable("deptNameTable", "deptName",f"deptAbbreviation = '{name}'")
@@ -84,7 +84,7 @@ def courseListDeptName(db, name, filters = (0,0,0)):
         else:
             print("COUNDN'T FIND THE DEPARTMENT. RECHECK THE ENTERED NAME")
             return
-    if filters != (0,0,0):
+    if filters != (0,0,0,0):
         whereClause += f" and {whereClauseFilters(filters)}"
     try : 
         course = db.extractValuesMultipleTables(("coursesTable", "deptNameTable"),
@@ -98,9 +98,9 @@ def courseListDeptName(db, name, filters = (0,0,0)):
     except: 
         print("COULDN'T FIND ANY COURSE")
 
-def courseListCourseNum(db, num, filters = (0,0,0)):
+def courseListCourseNum(db, num, filters = (0,0,0,0)):
     whereClause = f"courseNum = {num}"
-    if filters != (0,0,0):
+    if filters != (0,0,0,0):
         whereClause += f" and {whereClauseFilters(filters)}"
     course = db.extractValuesMultipleTables(("coursesTable", "deptNameTable"),
                                     "coursesTable.deptNameID = deptNameTable.id",
@@ -112,11 +112,11 @@ def courseListCourseNum(db, num, filters = (0,0,0)):
     print("COULDN'T FIND ANY COURSE FOR THAT COURSE NUMBER")
 
 #find by course title
-def courseListCourseTitle(db, title, filters = (0,0,0)):
+def courseListCourseTitle(db, title, filters = (0,0,0,0)):
     title = title.upper()
 
     whereClause = f"courseTitle = '{title}'"
-    if filters != (0,0,0):
+    if filters != (0,0,0,0):
         whereClause += f" and {whereClauseFilters(filters)}"
     course = db.extractValuesMultipleTables(("coursesTable", "deptNameTable"),
                                     "coursesTable.deptNameID = deptNameTable.id",
@@ -131,7 +131,7 @@ def courseListCourseTitle(db, title, filters = (0,0,0)):
     for word in titleWords:
         whereClause += f"%{word}"
     whereClause += "%'"
-    if filters != (0,0,0):
+    if filters != (0,0,0,0):
         whereClause += f" and {whereClauseFilters(filters)}"
     #print(whereClause)
     course = db.extractValuesMultipleTables(("coursesTable", "deptNameTable"),
@@ -146,8 +146,8 @@ def courseListCourseTitle(db, title, filters = (0,0,0)):
 #where clause for filters
 def whereClauseFilters(filters):
     whereClause = ""
-    filtersName = ["genEdID", "breadthID", "levelID"]
-    for i in range(3):
+    filtersName = ["genEdID", "EthnicSt", "breadthID", "levelID"]
+    for i in range(4):
         if filters[i] != 0:
             if isinstance(filters[i],int):
                 if whereClause != "":
